@@ -4,74 +4,82 @@ import java.util.Arrays;
 
 public class GameBoard {
 
-
     private Token[][] board;
+    int size;
 
-    public GameBoard(int Size){
 
+    /**
+     * Constructeur Du Plateau de Jeu
+     * @param s longeur et largeur du plateau (6, 8 et 10 recommandé)
+     */
+    public GameBoard(int s){
+        this.size =s;
+        boardInit();
     }
 
-    private void boardInit(int s){
-        this.board = new Token[s][s];
-        for(int i=0; i<s;i++) {
-            for (int j = 0; j < s; j++) {
+    /**
+     * Initialisation du tableau du plateau
+     */
+    private void boardInit(){
+        this.board = new Token[size][size];
+        for(int i=0; i<size;i++) {
+            for (int j = 0; j < size; j++) {
                 board[i][j] = Token.Empty;
             }
         }
-        board[board.length/2][board.length/2] = Token.Black;
+        int demi = board.length/2;
+        board[demi][demi] = Token.Black;
+        board[demi-1][demi-1] = Token.Black;
+        board[demi-1][demi] = Token.White;
+        board[demi][demi-1] = Token.White;
+    }
+
+    public boolean equals(GameBoard gb){
+        boolean b= true;
+
+        if (gb.size!=size) {
+            b = false;
+        }else {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (board[i][j] != gb.board[i][j]) {
+                        b = false;
+                    }
+                }
+            }
+        }
+        return b;
+    }
+
+    public Token at(int i, int j){
+        return board[i][j];
+    }
+
+    public int getSize() {
+        return size;
     }
 
     @Override
     public String toString() {
-        return "GameBoard{" +
-                "board=" + Arrays.toString(board) +
-                '}';
-    }
-
-    /**
-     * joue le token c à l'emplacement [a][b]
-     * @param a
-     * @param b
-     * @param c
-     */
-    public void play(int a, int b, Token c){
-        board[a][b] = c;
-        //a completer avec le changement d'etat des autres token
-    }
-
-    /**
-     * verifie si le coup passé en parametre [a][b] pour la couleur c est valide
-     * @param a
-     * @param b
-     * @param c
-     * @return
-     */
-    public boolean valide(int a, int b, Token c){
-        boolean res = false;
-        int temp;
-
-        if(a >= 0 && b >= 0 && a < board.length && b < board[0].length){
-            if(board[a][b] == Token.Empty){
-                // a completer avec test finaux
+        StringBuilder sb = new StringBuilder();
+        sb.append("GameBoard: \n");
+        for(int i=0; i<size;i++) {
+            for (int j = 0; j < size; j++) {
+                sb.append("--");
             }
+            sb.append("\n");
+            for (int j = 0; j < size; j++) {
+                sb.append("|").append(board[i][j].toString());
+            }
+            sb.append("|\n");
         }
 
-        return res;
+        return sb.toString();
     }
 
-    /**
-     * methode pour verifier qu'il existe des coups possible pour la couleur c
-     * @param c
-     * @return
-     */
-    public boolean canPlay(Token c){
-        boolean res = false;
-        for(int i = 0;i< board.length;i++){
-            for(int j = 0;j< board.length;j++){
-                //test a completer
-            }
-        }
-        return res;
+    public static void main(String[] args){
+        GameBoard s = new GameBoard(8);
+        System.out.println(s.toString());
     }
 
 }
