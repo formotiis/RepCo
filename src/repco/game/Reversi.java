@@ -23,6 +23,13 @@ public class Reversi {
     }
 
 
+    public Token at(int x, int y){
+        return gb.at(x,y);
+    }
+
+    public int cote(){
+        return  gb.getSize();
+    }
     private void nextPlayerTurn() {
         turn ++;
     }
@@ -33,6 +40,10 @@ public class Reversi {
             b = true;
         }
         return b;
+    }
+
+    public int getPlayer(){
+        return turn%2;
     }
 
     public void readState(String name) {
