@@ -51,8 +51,15 @@ public class GameBoard {
         return b;
     }
 
+    public void place(int x, int y, Token tk){
+        this.board[x][y] = tk;
+    }
+
     public Token at(int i, int j){
         return board[i][j];
+    }
+    public void set(int i, int j){
+
     }
 
     public int getSize() {

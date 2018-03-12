@@ -26,4 +26,14 @@ public enum Token {
             return "0";
         }
     }
+
+    public Token opposit(){
+        if (this == Token.Black){
+            return Token.White;
+        } else if (this == Token.White) {
+            return Token.Black;
+        } else {
+            return Token.Empty;
+        }
+    }
 }
