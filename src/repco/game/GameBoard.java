@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class GameBoard {
 
     private Token[][] board;
-    int size;
+    private int size;
 
 
     /**
@@ -58,8 +58,8 @@ public class GameBoard {
     public Token at(int i, int j){
         return board[i][j];
     }
-    public void set(int i, int j){
-
+    public void set(int i, int j, Token k){
+        board[i][j] = k;
     }
 
     public int getSize() {

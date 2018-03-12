@@ -329,22 +329,21 @@ public class Reversi {
             }
         }
 
+        c = true;
         if (b){
             for (int i = x; ((i > 0) && c); i--) {
                 if (!(i == x)) {
                     if (gb.at(i, y) == t.opposit()) {
-                        //TODO:UPDATE
+                        gb.set(i,y, t);
                     } else if (gb.at(i, y) == t) {
-                        if (chainLength > 0) {
-                            b = true;
-                            c = false;
-                        }
+                        c= false;
                     } else {
                         c = false;
                     }
                 }
             }
         }
+        b= false;
         // down
 
         c = true;
@@ -363,7 +362,23 @@ public class Reversi {
                 }
             }
         }
+        c = true;
+        if (b){
+            for (int i = x; ((i < gb.getSize()) && c); i++) {
+                if (!(i == x)) {
+                    if (gb.at(i, y) == t.opposit()) {
+                        gb.set(i,y, t);
+                    } else if (gb.at(i, y) == t) {
+                        c= false;
+                    } else {
+                        c = false;
+                    }
+                }
+            }
+        }
+        b = false;
 
+        //TODO:Continue
 
         // left
 
