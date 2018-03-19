@@ -1,5 +1,6 @@
 package repco.game;
 
+import org.omg.PortableInterceptor.INACTIVE;
 import repco.player.Player;
 
 import java.io.*;
@@ -686,5 +687,57 @@ public class Reversi extends Observable {
             }
         }
         return res;
+    }
+
+    public Reversi Minimax(int c, Token k){
+        Reversi res = this; //TODO: ajouter passage de tour
+        ArrayList<Reversi> rever = generateNext();
+
+        //minimum
+        int score = Integer.MIN_VALUE;
+        int tmp;
+
+        for(int i =0;i < rever.size();i++){
+            tmp = eval(c,rever.get(i),k);
+            if(tmp >= score){
+                score = tmp;
+                res = rever.get(i);
+            }
+        }
+
+        return res;
+    }
+
+    private int eval(int c, Reversi r, Token k){
+        int res = 0;
+
+        int score_max = Integer.MIN_VALUE;
+        int score_min = Integer.MAX_VALUE;
+
+
+        if(r.isFinal()){
+            if(score(k) == score(k.opposit())) return 0;
+            if(score(k) > score(k.opposit())) return Integer.MAX_VALUE;
+            if(score(k) < score(k.opposit())) return Integer.MIN_VALUE;
+        }
+
+        //TODO: finir eval et commencer eval0
+        /*if(c == 0)
+            return eval0(r);*/
+
+        ArrayList<Reversi> rever = r.generateNext();
+
+        if(r.getTurn() == k){
+            for(int g = 0; g < rever.size();g++){
+                score_max = Integer.max(score_max,eval(c-1,rever.get(g),k));
+            }
+            return score_max;
+        }
+        else{
+            for(int h = 0;h < rever.size();h++){
+                score_min = Integer.min(score_min,eval(c-1,rever.get(h),k));
+            }
+            return score_min;
+        }
     }
 }
