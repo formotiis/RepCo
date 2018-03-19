@@ -21,13 +21,6 @@ public class ControlleurCase implements ActionListener {
         JButton jb = (JButton)(e.getSource());
         int y =Integer.parseInt(jb.getName())%mod.cote();
         int x =Integer.parseInt(jb.getName())/mod.cote();
-        if(mod.isActionPossible(x,y)){
-            if(mod.getPlayer() == 1)
-                jb.setBackground(Color.WHITE);
-            else jb.setBackground(Color.BLACK);
-
-            jb.setEnabled(false);
-            mod.play(x,y);
-        }
+        mod.play(x,y);
     }
 }

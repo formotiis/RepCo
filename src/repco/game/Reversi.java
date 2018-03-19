@@ -116,9 +116,10 @@ public class Reversi extends Observable {
         }
     }
 
+    //TODO: Fix placements deux cases de la même couleur sans autre lien
     public boolean isActionPossible(int x, int y){
         boolean b =false;
-        if (spreadCheck(x,y)){
+        if (spreadCheck(x,y)&&(at(x,y)==Token.Empty)){
             b= true;
         }
         return b;
@@ -133,6 +134,26 @@ public class Reversi extends Observable {
             } else {
                 t = Token.White;
             }
+        }
+        boolean hasFriends= false;
+        if (x+1<gb.getSize()){
+            if ((!(at(x+1,y)==Token.Empty))&&!hasFriends)
+                hasFriends = true;
+        }
+        if (y+1<gb.getSize()){
+            if ((!(at(x,y+1)==Token.Empty))&&!hasFriends)
+                hasFriends = true;
+        }
+        if (y-1>=0){
+            if ((!(at(x,y-1)==Token.Empty))&&!hasFriends)
+                hasFriends = true;
+        }
+        if (x-1>=0){
+            if ((!(at(x-1,y)==Token.Empty))&&!hasFriends)
+                hasFriends = true;
+        }
+        if (!hasFriends){
+            return hasFriends;
         }
 
         int chainLength;
@@ -192,6 +213,9 @@ public class Reversi extends Observable {
                 } else {
                     c = false;
                 }
+
+
+
             }
         }
 
@@ -215,7 +239,8 @@ public class Reversi extends Observable {
         }
 
         // Left up
-
+        c = true;
+        chainLength = 0;
         for (int i = x, j = y; ((i > 0) && (j > 0) && c); i--, j--) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
@@ -233,6 +258,8 @@ public class Reversi extends Observable {
 
         // left-down
 
+        c = true;
+        chainLength = 0;
         for (int i = x, j = y; ((i < gb.getSize()) && (j > 0) && c); i++, j--) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
@@ -250,6 +277,8 @@ public class Reversi extends Observable {
 
         // right-up
 
+        c = true;
+        chainLength = 0;
         for (int i = x, j = y; ((i > 0) && (j < gb.getSize()) && c); i--, j++) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
@@ -266,6 +295,8 @@ public class Reversi extends Observable {
         }
 
         // right-down
+        c = true;
+        chainLength = 0;
         for (int i = x, j = y; ((i < gb.getSize()) && (j < gb.getSize()) && c); i++, j++) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
@@ -367,8 +398,6 @@ public class Reversi extends Observable {
         }
         b = false;
 
-        //TODO:Continue
-
         // left
 
         c = true;
@@ -441,7 +470,8 @@ public class Reversi extends Observable {
 
 
         // Left up
-
+        c = true;
+        chainLength = 0;
         for (int i = x, j = y; ((i > 0) && (j > 0) && c); i--, j--) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
@@ -474,7 +504,8 @@ public class Reversi extends Observable {
         b = false;
 
         // left-down
-
+        c = true;
+        chainLength = 0;
         for (int i = x, j = y; ((i < gb.getSize()) && (j > 0) && c); i++, j--) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
@@ -510,7 +541,8 @@ public class Reversi extends Observable {
 
 
         // right-up
-
+        c = true;
+        chainLength = 0;
         for (int i = x, j = y; ((i > 0) && (j < gb.getSize()) && c); i--, j++) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
@@ -544,6 +576,8 @@ public class Reversi extends Observable {
 
 
         // right-down
+        c = true;
+        chainLength = 0;
         for (int i = x, j = y; ((i < gb.getSize()) && (j < gb.getSize()) && c); i++, j++) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
@@ -584,6 +618,29 @@ public class Reversi extends Observable {
         }
         return t;
     }
+
+    public boolean isFinal(){
+        boolean b = false;
+        if (moveList().size()==0){
+            turn+=1;
+            b= moveList().size()==0;
+            turn-=1;
+        }
+        return b;
+    }
+
+    public int score(Token color){
+        int s=0;
+        for(int i=0; i<gb.getSize();i++) {
+            for (int j = 0; j < gb.getSize(); j++) {
+                if (color.equals(at(i,j)))
+                    s+=1;
+            }
+        }
+        return s;
+    }
+
+
 
     private void updated(){
         setChanged();

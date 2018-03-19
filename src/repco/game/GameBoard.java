@@ -35,6 +35,25 @@ public class GameBoard {
         board[demi][demi-1] = Token.White;
     }
 
+    private void testingBoardInit(){
+        this.board = new Token[size][size];
+        for(int i=0; i<size;i++) {
+            for (int j = 0; j < size; j++) {
+                board[i][j] = Token.Empty;
+            }
+        }
+        int demi = board.length/2;
+        for(int i=demi-2; i<demi+2;i++) {
+            for (int j = demi-2; j < demi+2; j++) {
+                board[i][j] = Token.White;
+            }
+        }
+        board[demi][demi] = Token.Black;
+        board[demi-1][demi-1] = Token.Black;
+        board[demi-1][demi] = Token.Black;
+        board[demi][demi-1] = Token.Black;
+    }
+
     public boolean equals(GameBoard gb){
         boolean b= true;
 

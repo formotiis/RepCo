@@ -18,7 +18,9 @@ public class Graphic extends JFrame implements Observer{
     private JPanel pan;
     private JPanel info;
     JButton jbArr[][];
-    private JLabel l;
+    private JLabel turn;
+    private JLabel scB;
+    private JLabel scW;
 
     public Graphic(Reversi mod){
 
@@ -31,8 +33,14 @@ public class Graphic extends JFrame implements Observer{
             taille = 4;
 
         info = new JPanel();
-        l = new JLabel();
-        info.add(l);
+        turn = new JLabel();
+        scW = new JLabel();
+        scB = new JLabel();
+        info.add(turn);
+        info.add(scB);
+        info.add(scW);
+
+
 
         pan = new JPanel();
         pan.setLayout(new GridLayout(taille,taille));
@@ -79,19 +87,26 @@ public class Graphic extends JFrame implements Observer{
     @Override
     public void update(java.util.Observable o, Object arg) {
         if (rev.getTurn()==Token.Black){
-            l.setText("Tour du Joueur Noir");
+            turn.setText("Tour du Joueur Noir");
         } else {
-            l.setText("Tour du Joueur Blanc");
+            turn.setText("Tour du Joueur Blanc");
         }
+        scB.setText("Score Noir:"+rev.score(Token.Black));
+        scW.setText("Score Blanc:"+rev.score(Token.White));
         Token t;
         for(int i=0; i < taille;++i){
             for(int j =0;j < taille;++j) {
                 t = rev.at(i,j);
-                if(t.toInt().equals("2"))
+                if(t.toInt().equals("2")) {
                     jbArr[i][j].setBackground(Color.WHITE);
-                if(t.toInt().equals("1"))
+                    jbArr[i][j].setEnabled(false);
+                }
+                if(t.toInt().equals("1")) {
                     jbArr[i][j].setBackground(Color.BLACK);
+                    jbArr[i][j].setEnabled(false);
+                }
             }
         }
+
     }
 }
