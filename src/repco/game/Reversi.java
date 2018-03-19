@@ -5,22 +5,17 @@ import repco.player.Player;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Reversi extends Observable {
 
-    private Player first;
-    private Player second;
     private int turn;
 
     private GameBoard gb;
 
-    public Reversi(Player next, Player sec) {
+    public Reversi() {
         this.turn = 0;
         this.gb = new GameBoard(8);
-        this.first = next; //Premier Joueur et Noirs
-        this.second = sec;//Second Joueur et Blancs.
     }
 
 
@@ -35,13 +30,6 @@ public class Reversi extends Observable {
         turn ++;
     }
 
-    public boolean equals(Reversi r) {
-        boolean b = false;
-        if (this.gb.equals(r.gb)) {
-            b = true;
-        }
-        return b;
-    }
 
     public int getPlayer(){
         return turn%2;
@@ -602,5 +590,44 @@ public class Reversi extends Observable {
         notifyObservers();
     }
 
+    public int getTour(){
+        return turn;
+    }
 
+    public boolean equals(Reversi rever){
+        boolean res;
+
+        //test numero tour et couleur joueur courant
+        if((rever.getTurn() == this.getTurn()) && (this.getTour() == rever.getTour())){
+            res = true;
+        }
+        else res = false;
+
+        res = res && this.gb.equals(rever.getGameBoard());
+
+        return res;
+    }
+
+    public GameBoard getGameBoard() {
+        return gb;
+    }
+
+    public ArrayList<Reversi> generateNext(){
+
+        ArrayList<Reversi> res = new ArrayList<>();
+
+        int k = 0;
+        ArrayList<Integer> ar = this.moveList();
+
+        for(int i =0; i < ar.size();i+=2) {
+            try {
+                res.add((Reversi) this.clone());
+                res.get(k).play(i,i+1);
+                k++;
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
+        return res;
+    }
 }

@@ -25,7 +25,8 @@ public class ControlleurCase implements ActionListener {
             if(mod.getPlayer() == 1)
                 jb.setBackground(Color.WHITE);
             else jb.setBackground(Color.BLACK);
-            //TODO : update les toutes les cases concernées
+
+            jb.setEnabled(false);
             mod.play(x,y);
         }
     }

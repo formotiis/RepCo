@@ -44,10 +44,16 @@ public class Graphic extends JFrame implements Observer{
                 b = new JButton();
                 b.setName(i*taille+j+"");
                 t = rev.at(i,j);
-                if(t.toInt().equals("2"))
+                b.setBackground(Color.LIGHT_GRAY);
+                if(t.toInt().equals("2")) {
                     b.setBackground(Color.WHITE);
-                if(t.toInt().equals("1"))
+                    b.setEnabled(false);
+                }
+                if(t.toInt().equals("1")){
+                    b.setEnabled(false);
                     b.setBackground(Color.BLACK);
+                }
+
 
                 b.addActionListener(new ControlleurCase(rev));
 
@@ -65,7 +71,7 @@ public class Graphic extends JFrame implements Observer{
     }
 
     public static void main(String[] argv){
-        Reversi mod = new Reversi(new Human("Michel"), new Human("Rachel"));
+        Reversi mod = new Reversi();
         Graphic f = new Graphic(mod);
 
     }
