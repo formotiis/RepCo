@@ -1,6 +1,7 @@
 package repco.game;
 
 import java.util.Arrays;
+import java.util.Observable;
 
 public class GameBoard {
 

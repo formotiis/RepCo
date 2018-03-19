@@ -4,10 +4,11 @@ import repco.player.Player;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Reversi {
+public class Reversi extends Observable {
 
     private Player first;
     private Player second;
@@ -90,12 +91,12 @@ public class Reversi {
      * @param y
      */
     public void play(int x, int y){
-        if (turn%2 == 0){
-            gb.place(x, y, Token.Black);
-        } else {
-            gb.place(x, y, Token.White);
+        if (isActionPossible(x,y)) {
+            gb.place(x, y, getTurn());
+            spread(x,y);
+            nextPlayerTurn();
+            updated();
         }
-        nextPlayerTurn();
     }
 
     public ArrayList<Integer> moveList(){
@@ -399,6 +400,22 @@ public class Reversi {
             }
         }
 
+        c = true;
+        if (b){
+            for (int i = y; ((i > 0) && c); i--) {
+                if (!(i == y)) {
+                    if (gb.at(x, i) == t.opposit()) {
+                        gb.set(x,i, t);
+                    } else if (gb.at(x, i) == t) {
+                        c= false;
+                    } else {
+                        c = false;
+                    }
+                }
+            }
+        }
+        b = false;
+
         // right
 
         c = true;
@@ -418,6 +435,23 @@ public class Reversi {
             }
         }
 
+        c = true;
+        if (b){
+            for (int i = y; ((i < gb.getSize()) && c); i++) {
+                if (!(i == y)) {
+                    if (gb.at(x, i) == t.opposit()) {
+                        gb.set(x,i, t);
+                    } else if (gb.at(x, i) == t) {
+                        c= false;
+                    } else {
+                        c = false;
+                    }
+                }
+            }
+        }
+        b = false;
+
+
         // Left up
 
         for (int i = x, j = y; ((i > 0) && (j > 0) && c); i--, j--) {
@@ -434,6 +468,22 @@ public class Reversi {
                 }
             }
         }
+
+        c = true;
+        if (b){
+            for (int i = x, j = y; ((i > 0) && (j > 0) && c); i--, j--) {
+                if (!(i == x)) {
+                    if (gb.at(i, j) == t.opposit()) {
+                        gb.set(i,j, t);
+                    } else if (gb.at(i, j) == t) {
+                        c= false;
+                    } else {
+                        c = false;
+                    }
+                }
+            }
+        }
+        b = false;
 
         // left-down
 
@@ -452,6 +502,25 @@ public class Reversi {
             }
         }
 
+        c = true;
+        if (b){
+            for (int i = x, j = y; ((i < gb.getSize()) && (j > 0) && c); i++, j--) {
+                if (!(i == x)) {
+                    if (gb.at(i, j) == t.opposit()) {
+                        gb.set(i,j, t);
+                    } else if (gb.at(i, j) == t) {
+                        c= false;
+                    } else {
+                        c = false;
+                    }
+                }
+            }
+        }
+        b = false;
+
+
+
+
         // right-up
 
         for (int i = x, j = y; ((i > 0) && (j < gb.getSize()) && c); i--, j++) {
@@ -469,6 +538,23 @@ public class Reversi {
             }
         }
 
+        c = true;
+        if (b){
+            for (int i = x, j = y; ((i > 0) && (j < gb.getSize()) && c); i--, j++) {
+                if (!(i == x)) {
+                    if (gb.at(i, j) == t.opposit()) {
+                        gb.set(i,j, t);
+                    } else if (gb.at(i, j) == t) {
+                        c= false;
+                    } else {
+                        c = false;
+                    }
+                }
+            }
+        }
+        b = false;
+
+
         // right-down
         for (int i = x, j = y; ((i < gb.getSize()) && (j < gb.getSize()) && c); i++, j++) {
             if (!(i == x)) {
@@ -484,6 +570,36 @@ public class Reversi {
                 }
             }
         }
+
+        c = true;
+        if (b){
+            for (int i = x, j = y; ((i < gb.getSize()) && (j < gb.getSize()) && c); i++, j++) {
+                if (!(i == x)) {
+                    if (gb.at(i, j) == t.opposit()) {
+                        gb.set(i,j, t);
+                    } else if (gb.at(i, j) == t) {
+                        c= false;
+                    } else {
+                        c = false;
+                    }
+                }
+            }
+        }
+    }
+
+    public Token getTurn(){
+        Token t;
+        if (turn % 2 == 0) {
+            t = Token.Black;
+        } else {
+            t = Token.White;
+        }
+        return t;
+    }
+
+    private void updated(){
+        setChanged();
+        notifyObservers();
     }
 
 
