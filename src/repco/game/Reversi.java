@@ -1,5 +1,6 @@
 package repco.game;
 
+import org.omg.CORBA.INTERNAL;
 import org.omg.PortableInterceptor.INACTIVE;
 import repco.player.Player;
 
@@ -738,9 +739,8 @@ public class Reversi extends Observable {
             if(score(k) < score(k.opposit())) return Integer.MIN_VALUE;
         }
 
-        //TODO: finir eval et commencer eval0
-        /*if(c == 0)
-            return eval0(r);*/
+        if(c == 0)
+            return eval0(r,k);
 
         ArrayList<Reversi> rever = r.generateNext();
 
@@ -758,7 +758,65 @@ public class Reversi extends Observable {
         }
     }
 
-    public void eval0() {
+    public int eval0(Reversi r, Token k) {
+        int res = r.score(k) - r.score(k.opposit());
+        return res;
+    }
 
+    public Reversi MinimaxAB(int c, Token k){
+        Reversi res = this; //TODO: ajouter passage de tour
+        ArrayList<Reversi> rever = generateNext();
+
+        //minimum
+        int score = Integer.MIN_VALUE;
+        int tmp;
+
+        for(int i =0;i < rever.size();i++) {
+            tmp = evalAB(c, rever.get(i), k,Integer.MAX_VALUE, Integer.MIN_VALUE);
+            if (tmp >= score) {
+                score = tmp;
+                res = rever.get(i);
+            }
+        }
+
+        return res;
+    }
+
+    public int evalAB(int c, Reversi r, Token k, int a, int b){
+
+        int score_max;
+        int score_min;
+
+        if(r.isFinal()){
+            if(score(k) == score(k.opposit())) return 0;
+            if(score(k) > score(k.opposit())) return Integer.MAX_VALUE;
+            if(score(k) < score(k.opposit())) return Integer.MIN_VALUE;
+        }
+
+        if(c == 0)
+            return eval0(r,k);
+
+        ArrayList<Reversi> rever = r.generateNext();
+
+        if(r.getTurn() == k){
+            score_max = Integer.MIN_VALUE;
+            for(int g = 0; g < rever.size();g++){
+                score_max = Integer.max(score_max,evalAB(c-1,rever.get(g),k,a,b));
+                if(score_max >= b)
+                    return score_max;
+                a = Integer.max(a,score_max);
+            }
+            return score_max;
+        }
+        else{
+            score_min = Integer.MAX_VALUE;
+            for(int h = 0;h < rever.size();h++){
+                score_min = Integer.min(score_min,evalAB(c-1,rever.get(h),k,a,b));
+                if(score_min <= a)
+                    return score_min;
+                b = Integer.min(b,score_min);
+            }
+            return score_min;
+        }
     }
 }
