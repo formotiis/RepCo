@@ -21,6 +21,7 @@ public class ControlleurCase implements ActionListener {
         JButton jb = (JButton)(e.getSource());
         int y =Integer.parseInt(jb.getName())%mod.cote();
         int x =Integer.parseInt(jb.getName())/mod.cote();
+
         mod.play(x,y);
     }
 }

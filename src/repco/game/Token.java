@@ -16,6 +16,16 @@ public enum Token {
         }
     }
 
+    public String verbose() {
+        if (this == Token.Black){
+            return "Black";
+        } else if (this == Token.White) {
+            return "White";
+        } else {
+            return " ";
+        }
+    }
+
 
     public String toInt() {
         if (this == Token.Black){

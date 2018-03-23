@@ -7,4 +7,8 @@ public class Human extends Player {
         this.name = name;
     }
 
+    @Override
+    public boolean isHuman() {
+        return true;
+    }
 }

@@ -2,9 +2,12 @@ package repco.game;
 
 import org.omg.CORBA.INTERNAL;
 import org.omg.PortableInterceptor.INACTIVE;
+import repco.player.Computer;
 import repco.player.Player;
 
+import javax.swing.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Scanner;
@@ -13,11 +16,18 @@ public class Reversi extends Observable {
 
     private int turn;
 
+    private Player black;
+    private Player white;
+
     private GameBoard gb;
 
-    public Reversi() {
+    public Reversi(Player f, Player s) {
         this.turn = 0;
         this.gb = new GameBoard(8);
+        this.black = f;
+        f.setColor(Token.Black);
+        this.white = s;
+        s.setColor(Token.White);
     }
 
 
@@ -32,8 +42,23 @@ public class Reversi extends Observable {
         turn ++;
     }
 
+    public boolean isPlayerHuman(){
+        if (getTurnColor()==Token.Black){
+            return black.isHuman();
+        } else {
+            return white.isHuman();
+        }
+    }
 
-    public int getPlayer(){
+    public Player getPlayer(){
+        if (getTurnColor()==Token.Black){
+            return black;
+        } else {
+            return white;
+        }
+    }
+
+    public int getTurnID(){
         return turn%2;
     }
 
@@ -82,11 +107,23 @@ public class Reversi extends Observable {
      */
     public void play(int x, int y){
         if (isActionPossible(x,y)) {
-            gb.place(x, y, getTurn());
+            gb.place(x, y, getTurnColor());
             spread(x,y);
             nextPlayerTurn();
             updated();
+            if (!isPlayerHuman()){
+                ((Computer)getPlayer()).action(this);
+            }
         }
+    }
+
+    public boolean skipTurn(){
+        if (moveList().size()==0){
+            nextPlayerTurn();
+            updated();
+            return true;
+        }
+        return false;
     }
 
     public ArrayList<Integer> moveList(){
@@ -118,6 +155,7 @@ public class Reversi extends Observable {
         }
     }
 
+    //TODO: Fix placements deux cases de la même couleur sans autre lien
     public boolean isActionPossible(int x, int y){
         boolean b =false;
         if (spreadCheck(x,y)&&(at(x,y)==Token.Empty)){
@@ -628,7 +666,7 @@ public class Reversi extends Observable {
         }
     }
 
-    public Token getTurn(){
+    public Token getTurnColor(){
         Token t;
         if (turn % 2 == 0) {
             t = Token.Black;
@@ -674,7 +712,7 @@ public class Reversi extends Observable {
         boolean res;
 
         //test numero tour et couleur joueur courant
-        if((rever.getTurn() == this.getTurn()) && (this.getTour() == rever.getTour())){
+        if((rever.getTurnColor() == this.getTurnColor()) && (this.getTour() == rever.getTour())){
             res = true;
         }
         else res = false;
@@ -744,7 +782,7 @@ public class Reversi extends Observable {
 
         ArrayList<Reversi> rever = r.generateNext();
 
-        if(r.getTurn() == k){
+        if(r.getTurnColor() == k){
             for(int g = 0; g < rever.size();g++){
                 score_max = Integer.max(score_max,eval(c-1,rever.get(g),k));
             }
@@ -798,7 +836,7 @@ public class Reversi extends Observable {
 
         ArrayList<Reversi> rever = r.generateNext();
 
-        if(r.getTurn() == k){
+        if(r.getTurnColor() == k){
             score_max = Integer.MIN_VALUE;
             for(int g = 0; g < rever.size();g++){
                 score_max = Integer.max(score_max,evalAB(c-1,rever.get(g),k,a,b));

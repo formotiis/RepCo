@@ -1,14 +1,11 @@
 package repco;
 
-import javafx.beans.Observable;
 import repco.game.Reversi;
 import repco.game.Token;
 import repco.player.Human;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Observer;
 
 public class Graphic extends JFrame implements Observer{
@@ -79,14 +76,14 @@ public class Graphic extends JFrame implements Observer{
     }
 
     public static void main(String[] argv){
-        Reversi mod = new Reversi();
+        Reversi mod = new Reversi(new Human("s"), new Human("uh"));
         Graphic f = new Graphic(mod);
 
     }
 
     @Override
     public void update(java.util.Observable o, Object arg) {
-        if (rev.getTurn()==Token.Black){
+        if (rev.getTurnColor()==Token.Black){
             turn.setText("Tour du Joueur Noir");
         } else {
             turn.setText("Tour du Joueur Blanc");
@@ -107,6 +104,8 @@ public class Graphic extends JFrame implements Observer{
                 }
             }
         }
+
+
 
     }
 }
