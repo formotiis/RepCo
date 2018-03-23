@@ -117,7 +117,6 @@ public class Reversi extends Observable {
         }
     }
 
-    //TODO: Fix placements deux cases de la même couleur sans autre lien
     public boolean isActionPossible(int x, int y){
         boolean b =false;
         if (spreadCheck(x,y)&&(at(x,y)==Token.Empty)){
@@ -129,6 +128,8 @@ public class Reversi extends Observable {
     public boolean spreadCheck(int x, int y) {
         boolean b = false;
         Token t = gb.at(x, y);
+
+        //recuperation joueur en cour
         if (t == Token.Empty) {
             if (turn % 2 == 0) {
                 t = Token.Black;
@@ -136,6 +137,8 @@ public class Reversi extends Observable {
                 t = Token.White;
             }
         }
+
+        //test case click valide
         boolean hasFriends= false;
         if (x+1<gb.getSize()){
             if ((!(at(x+1,y)==Token.Empty))&&!hasFriends)
@@ -172,6 +175,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -191,6 +195,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -209,14 +214,13 @@ public class Reversi extends Observable {
                 } else if (gb.at(x, i) == t) {
                     if (chainLength > 0) {
                         b = true;
+
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
-
-
-
             }
         }
 
@@ -233,6 +237,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -251,6 +256,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -270,6 +276,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -289,6 +296,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -307,6 +315,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -344,6 +353,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -378,6 +388,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -412,6 +423,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -447,6 +459,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -482,6 +495,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -516,6 +530,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -553,6 +568,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -588,6 +604,7 @@ public class Reversi extends Observable {
                         b = true;
                         c = false;
                     }
+                    else c = false;
                 } else {
                     c = false;
                 }
@@ -739,5 +756,9 @@ public class Reversi extends Observable {
             }
             return score_min;
         }
+    }
+
+    public void eval0() {
+
     }
 }
