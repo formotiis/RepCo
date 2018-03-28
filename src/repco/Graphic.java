@@ -102,6 +102,12 @@ public class Graphic extends JFrame implements Observer{
                     jbArr[i][j].setBackground(Color.BLACK);
                     jbArr[i][j].setEnabled(false);
                 }
+                if (rev.isActionPossible(i,j)){
+                    jbArr[i][j].setBackground(Color.green);
+                }else if (t.toInt().equals("0")){
+                    jbArr[i][j].setBackground(Color.LIGHT_GRAY);
+                }
+
             }
         }
 
