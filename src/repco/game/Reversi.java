@@ -2,22 +2,27 @@ package repco.game;
 
 import org.omg.CORBA.INTERNAL;
 import org.omg.PortableInterceptor.INACTIVE;
+import repco.ActionController;
 import repco.player.Computer;
 import repco.player.Player;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Scanner;
 
-public class Reversi extends Observable {
+public class Reversi extends Observable{
 
     private int turn;
 
     private Player black;
     private Player white;
+
+    private ActionController ac;
 
     private GameBoard gb;
 
@@ -28,6 +33,17 @@ public class Reversi extends Observable {
         f.setColor(Token.Black);
         this.white = s;
         s.setColor(Token.White);
+        this.ac= new ActionController(this);
+    }
+
+    private Reversi(Player f, Player s, int t, GameBoard b){
+        this.turn = t;
+        this.black = f;
+        f.setColor(Token.Black);
+        this.white =s;
+        s.setColor(Token.White);
+        this.gb = b;
+        this.ac = new ActionController(this);
     }
 
 
@@ -111,9 +127,6 @@ public class Reversi extends Observable {
             spread(x,y);
             nextPlayerTurn();
             updated();
-            if (!isPlayerHuman()){
-                ((Computer)getPlayer()).action(this);
-            }
         }
     }
 
@@ -155,7 +168,6 @@ public class Reversi extends Observable {
         }
     }
 
-    //TODO: Fix placements deux cases de la même couleur sans autre lien
     public boolean isActionPossible(int x, int y){
         boolean b =false;
         if (spreadCheck(x,y)&&(at(x,y)==Token.Empty)){
@@ -205,7 +217,7 @@ public class Reversi extends Observable {
         // up
         c = true;
         chainLength = 0;
-        for (int i = x; ((i > 0) && c); i--) {
+        for (int i = x; ((i >= 0) && c); i--) {
             if (!(i == x)) {
                 if (gb.at(i, y) == t.opposit()) {
                     chainLength += 1;
@@ -246,7 +258,7 @@ public class Reversi extends Observable {
 
         c = true;
         chainLength = 0;
-        for (int i = y; ((i > 0) && c); i--) {
+        for (int i = y; ((i >= 0) && c); i--) {
             if (!(i == y)) {
                 if (gb.at(x, i) == t.opposit()) {
                     chainLength += 1;
@@ -286,7 +298,7 @@ public class Reversi extends Observable {
         // Left up
         c = true;
         chainLength = 0;
-        for (int i = x, j = y; ((i > 0) && (j > 0) && c); i--, j--) {
+        for (int i = x, j = y; ((i >= 0) && (j > 0) && c); i--, j--) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
                     chainLength += 1;
@@ -306,7 +318,7 @@ public class Reversi extends Observable {
 
         c = true;
         chainLength = 0;
-        for (int i = x, j = y; ((i < gb.getSize()) && (j > 0) && c); i++, j--) {
+        for (int i = x, j = y; ((i < gb.getSize()) && (j >= 0) && c); i++, j--) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
                     chainLength += 1;
@@ -326,7 +338,7 @@ public class Reversi extends Observable {
 
         c = true;
         chainLength = 0;
-        for (int i = x, j = y; ((i > 0) && (j < gb.getSize()) && c); i--, j++) {
+        for (int i = x, j = y; ((i >= 0) && (j < gb.getSize()) && c); i--, j++) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
                     chainLength += 1;
@@ -383,7 +395,7 @@ public class Reversi extends Observable {
         // up
         c = true;
         chainLength = 0;
-        for (int i = x; ((i > 0) && c); i--) {
+        for (int i = x; ((i >= 0) && c); i--) {
             if (!(i == x)) {
                 if (gb.at(i, y) == t.opposit()) {
                     chainLength += 1;
@@ -401,7 +413,7 @@ public class Reversi extends Observable {
 
         c = true;
         if (b){
-            for (int i = x; ((i > 0) && c); i--) {
+            for (int i = x; ((i >= 0) && c); i--) {
                 if (!(i == x)) {
                     if (gb.at(i, y) == t.opposit()) {
                         gb.set(i,y, t);
@@ -453,7 +465,7 @@ public class Reversi extends Observable {
 
         c = true;
         chainLength = 0;
-        for (int i = y; ((i > 0) && c); i--) {
+        for (int i = y; ((i >= 0) && c); i--) {
             if (!(i == y)) {
                 if (gb.at(x, i) == t.opposit()) {
                     chainLength += 1;
@@ -471,7 +483,7 @@ public class Reversi extends Observable {
 
         c = true;
         if (b){
-            for (int i = y; ((i > 0) && c); i--) {
+            for (int i = y; ((i >= 0) && c); i--) {
                 if (!(i == y)) {
                     if (gb.at(x, i) == t.opposit()) {
                         gb.set(x,i, t);
@@ -525,7 +537,7 @@ public class Reversi extends Observable {
         // Left up
         c = true;
         chainLength = 0;
-        for (int i = x, j = y; ((i > 0) && (j > 0) && c); i--, j--) {
+        for (int i = x, j = y; ((i >= 0) && (j >= 0) && c); i--, j--) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
                     chainLength += 1;
@@ -543,7 +555,7 @@ public class Reversi extends Observable {
 
         c = true;
         if (b){
-            for (int i = x, j = y; ((i > 0) && (j > 0) && c); i--, j--) {
+            for (int i = x, j = y; ((i >= 0) && (j >= 0) && c); i--, j--) {
                 if (!(i == x)) {
                     if (gb.at(i, j) == t.opposit()) {
                         gb.set(i,j, t);
@@ -560,7 +572,7 @@ public class Reversi extends Observable {
         // left-down
         c = true;
         chainLength = 0;
-        for (int i = x, j = y; ((i < gb.getSize()) && (j > 0) && c); i++, j--) {
+        for (int i = x, j = y; ((i < gb.getSize()) && (j >= 0) && c); i++, j--) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
                     chainLength += 1;
@@ -578,7 +590,7 @@ public class Reversi extends Observable {
 
         c = true;
         if (b){
-            for (int i = x, j = y; ((i < gb.getSize()) && (j > 0) && c); i++, j--) {
+            for (int i = x, j = y; ((i < gb.getSize()) && (j >= 0) && c); i++, j--) {
                 if (!(i == x)) {
                     if (gb.at(i, j) == t.opposit()) {
                         gb.set(i,j, t);
@@ -598,7 +610,7 @@ public class Reversi extends Observable {
         // right-up
         c = true;
         chainLength = 0;
-        for (int i = x, j = y; ((i > 0) && (j < gb.getSize()) && c); i--, j++) {
+        for (int i = x, j = y; ((i >= 0) && (j < gb.getSize()) && c); i--, j++) {
             if (!(i == x)) {
                 if (gb.at(i, j) == t.opposit()) {
                     chainLength += 1;
@@ -616,7 +628,7 @@ public class Reversi extends Observable {
 
         c = true;
         if (b){
-            for (int i = x, j = y; ((i > 0) && (j < gb.getSize()) && c); i--, j++) {
+            for (int i = x, j = y; ((i >= 0) && (j < gb.getSize()) && c); i--, j++) {
                 if (!(i == x)) {
                     if (gb.at(i, j) == t.opposit()) {
                         gb.set(i,j, t);
@@ -680,8 +692,9 @@ public class Reversi extends Observable {
         boolean b = false;
         if (moveList().size()==0){
             turn+=1;
-            b= moveList().size()==0;
-            turn-=1;
+                Reversi r = this.clone();
+                r.nextPlayerTurn();
+                b = r.moveList().size() ==0;
         }
         return b;
     }
@@ -699,9 +712,20 @@ public class Reversi extends Observable {
 
 
 
-    private void updated(){
+    private void updated() {
         setChanged();
         notifyObservers();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Turn:"+turn);
+        actionProcess();
+    }
+
+    private void actionProcess(){
+        ac.actionPerformed(new ActionEvent(this, turn, getTurnColor().verbose()));
     }
 
     public int getTour(){
@@ -734,13 +758,9 @@ public class Reversi extends Observable {
         ArrayList<Integer> ar = this.moveList();
 
         for(int i =0; i < ar.size();i+=2) {
-            try {
-                res.add((Reversi) this.clone());
+                res.add(this.clone());
                 res.get(k).play(i,i+1);
                 k++;
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
         }
         return res;
     }
@@ -856,5 +876,10 @@ public class Reversi extends Observable {
             }
             return score_min;
         }
+    }
+
+
+    protected Reversi clone(){
+        return new Reversi(black, white, turn, new GameBoard(getGameBoard()));
     }
 }

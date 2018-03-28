@@ -18,6 +18,16 @@ public class GameBoard {
         boardInit();
     }
 
+    public GameBoard(GameBoard g){
+        this.size = g.getSize();
+        boardInit();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                board[i][j] = g.board[i][j];
+            }
+        }
+    }
+
     /**
      * Initialisation du tableau du plateau
      */

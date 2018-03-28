@@ -36,6 +36,7 @@ public class Test {
             Reversi mod = new Reversi(new Computer(), new Computer());
 
             Graphic f = new Graphic(mod);
+            ((Computer)mod.getPlayer()).action(mod);
         }else{
             jop2.showMessageDialog(null, "Quelquechose s'est mal passé",
                     "Erreur", JOptionPane.ERROR_MESSAGE);
